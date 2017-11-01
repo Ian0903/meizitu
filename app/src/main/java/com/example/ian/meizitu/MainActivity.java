@@ -14,9 +14,10 @@ import android.view.Window;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -107,18 +108,21 @@ public class MainActivity extends AppCompatActivity {
     public void GetData(int count,int page){
 
 
-
-            ApiService.getService().getData("福利",count,page)
+        Observable.combineLatest(ApiService.getService().getData("福利", count, page),
+                ApiService.getService().getData("休息视频", count, page), new Func2<Meizis, Meizis, List<Meizis.Meizi>>() {
+                    @Override
+                    public List<Meizis.Meizi> call(Meizis fulis, Meizis videos) {
+                        List<Meizis.Meizi> temp1Meizis = fulis.getResults();
+                        List<Meizis.Meizi> temp2Meizis = videos.getResults();
+                        for (int i=0;i<temp1Meizis.size();i++){
+                            temp1Meizis.get(i).setDesc(temp2Meizis.get(i).getDesc());
+                        }
+                        return temp1Meizis;
+                    }
+                })
                     .subscribeOn(Schedulers.io())
                     .unsubscribeOn(Schedulers.io())
                     .subscribeOn(AndroidSchedulers.mainThread())
-                    .observeOn(Schedulers.newThread())
-                    .map(new Func1<Meizis, List<Meizis.Meizi>>() {
-                        @Override
-                        public List<Meizis.Meizi> call(Meizis meizis) {
-                            return meizis.getResults();
-                        }
-                    })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<List<Meizis.Meizi>>() {
                         @Override
