@@ -54,6 +54,7 @@ public class Meizis {
         private String url;
         private boolean used;
         private String who;
+        private String videoUrl;
 
         public String get_id() {
             return _id;
@@ -126,5 +127,9 @@ public class Meizis {
         public void setWho(String who) {
             this.who = who;
         }
+
+        public void setVideoUrl(String videoUrl){this.videoUrl = videoUrl;}
+
+        public String getVideoUrl(){return videoUrl;}
     }
 }

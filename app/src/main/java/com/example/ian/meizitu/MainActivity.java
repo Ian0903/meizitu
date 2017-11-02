@@ -1,5 +1,6 @@
 package com.example.ian.meizitu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void GetData(int count,int page){
+    public void GetData(final int count, int page){
 
 
         Observable.combineLatest(ApiService.getService().getData("福利", count, page),
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         List<Meizis.Meizi> temp2Meizis = videos.getResults();
                         for (int i=0;i<temp1Meizis.size();i++){
                             temp1Meizis.get(i).setDesc(temp2Meizis.get(i).getDesc());
+                            temp1Meizis.get(i).setVideoUrl(temp2Meizis.get(i).getUrl());
                         }
                         return temp1Meizis;
                     }
@@ -158,6 +160,11 @@ public class MainActivity extends AppCompatActivity {
                                         public void onItemClick(View view) {
                                             int position = recyclerView.getChildAdapterPosition(view);
                                             SnackbarUtil.ShortSnackbar(coordinatorLayout,"点击第"+position+"个",SnackbarUtil.Info).show();
+                                            String url = meizis.get(position).getVideoUrl();
+                                            SnackbarUtil.ShortSnackbar(coordinatorLayout,url,SnackbarUtil.Info).show();
+                                            Intent intent = new Intent(MainActivity.this,ContentActivity.class);
+                                            intent.putExtra("videoUrl",url);
+                                            startActivity(intent);
                                         }
                                     });
                                 }
