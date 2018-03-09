@@ -56,7 +56,6 @@ public class GridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-
         //绑定item图片
        Picasso.with(context).load(meizis.get(position).getUrl()).into(((MyViewHolder) holder).grid_photo);
         //绑定item标题
@@ -75,7 +74,7 @@ public class GridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    private class MyViewHolder extends RecyclerView.ViewHolder{
 
         private TextView grid_title;
 

@@ -27,8 +27,28 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/play_photo"
             android:background="#ffffff"/>
+        <TextView
+            android:id="@+id/content_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="每日技术文章"
+            android:textSize="20sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/content_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#000000"
+            android:dividerHeight="3dp">
+
+        </android.support.v7.widget.RecyclerView>
 
 
     </LinearLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -127,9 +127,5 @@ public class Meizis {
         public void setWho(String who) {
             this.who = who;
         }
-
-        public void setVideoUrl(String videoUrl){this.videoUrl = videoUrl;}
-
-        public String getVideoUrl(){return videoUrl;}
     }
 }

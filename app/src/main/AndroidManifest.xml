@@ -25,9 +25,13 @@
         <activity
             android:name=".VideoActivity"
             android:label="@string/title_activity_video"
-            android:theme="@style/AppTheme"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ArticleActivity"
+            android:theme="@style/AppTheme"
+            ></activity>
     </application>
 
 </manifest>

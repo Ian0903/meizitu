@@ -12,4 +12,7 @@ import rx.Observable;
 public interface GankApi {
     @GET("data/{type}/{count}/{page}")
     Observable<Meizis>  getData(@Path("type") String type,@Path("count") int count,@Path("page") int page );
+
+    @GET("day/{year}/{month}/{day}")
+    Observable<DateEnity> getContent(@Path("year") String year,@Path("month") String month,@Path("day") String day);
 }

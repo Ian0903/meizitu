@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
                         List<Meizis.Meizi> temp2Meizis = videos.getResults();
                         for (int i=0;i<temp1Meizis.size();i++){
                             temp1Meizis.get(i).setDesc(temp2Meizis.get(i).getDesc());
-                            temp1Meizis.get(i).setVideoUrl(temp2Meizis.get(i).getUrl());
                         }
                         return temp1Meizis;
                     }
@@ -159,11 +158,9 @@ public class MainActivity extends AppCompatActivity {
                                         @Override
                                         public void onItemClick(View view) {
                                             int position = recyclerView.getChildAdapterPosition(view);
-                                            SnackbarUtil.ShortSnackbar(coordinatorLayout,"点击第"+position+"个",SnackbarUtil.Info).show();
-                                            String url = meizis.get(position).getVideoUrl();
-                                            SnackbarUtil.ShortSnackbar(coordinatorLayout,url,SnackbarUtil.Info).show();
+                                            String date = meizis.get(position).getPublishedAt();
                                             Intent intent = new Intent(MainActivity.this,ContentActivity.class);
-                                            intent.putExtra("videoUrl",url);
+                                            intent.putExtra("date",date);//用日期作为请求标志
                                             startActivity(intent);
                                         }
                                     });
@@ -176,5 +173,6 @@ public class MainActivity extends AppCompatActivity {
                     });
 
     }
+
 
 }
