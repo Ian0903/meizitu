@@ -6,12 +6,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,17 +20,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ContentActivity"
+            android:name=".activity.ContentActivity"
             android:label="@string/title_activity_content"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".VideoActivity"
+            android:name=".activity.VideoActivity"
             android:label="@string/title_activity_video"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ArticleActivity"
+            android:name=".activity.ArticleActivity"
             android:theme="@style/AppTheme"
             ></activity>
     </application>

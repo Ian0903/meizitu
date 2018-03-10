@@ -1,4 +1,4 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.util;
 
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.ian.meizitu.R;
 
 /**
  * Created by 赵晨璞 on 2016/6/16.

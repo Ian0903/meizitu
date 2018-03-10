@@ -1,4 +1,4 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.net;
 
 import java.util.concurrent.TimeUnit;
 

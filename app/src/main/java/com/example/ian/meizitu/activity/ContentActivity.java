@@ -1,4 +1,4 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.ian.meizitu.net.ApiService;
+import com.example.ian.meizitu.bean.Basebean;
+import com.example.ian.meizitu.adapter.ContentAdapter;
+import com.example.ian.meizitu.bean.DateEnity;
+import com.example.ian.meizitu.R;
+import com.example.ian.meizitu.util.SnackbarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +93,7 @@ public class ContentActivity extends AppCompatActivity {
                 int position = contentRecycler.getChildAdapterPosition(view);
                 String articleUrl = contentList.get(position).getUrl();
                 Intent artUrlIntent = new Intent(ContentActivity.this,ArticleActivity.class);
-                artUrlIntent.putExtra("articleUrl",articleUrl);
+                artUrlIntent.putExtra("url",articleUrl);
                 startActivity(artUrlIntent);
             }
         });

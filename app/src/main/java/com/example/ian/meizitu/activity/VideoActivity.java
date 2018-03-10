@@ -1,14 +1,17 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+
+import com.example.ian.meizitu.R;
 
 public class VideoActivity extends AppCompatActivity {
 
@@ -42,8 +45,10 @@ public class VideoActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);//配置JavaScript交互
         webSettings.setUseWideViewPort(true);//设置图片适合webview大小
         webSettings.setLoadWithOverviewMode(true);//缩放至屏幕大小
+        webSettings.setBuiltInZoomControls(true);
 
         //加载视频网站
+        videoView.setWebChromeClient(new WebChromeClient());
         videoView.setWebViewClient(new WebViewClient());
         videoView.loadUrl(videoUrl);
 

@@ -1,4 +1,4 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+
+import com.example.ian.meizitu.net.ApiService;
+import com.example.ian.meizitu.adapter.GridAdapter;
+import com.example.ian.meizitu.bean.Meizis;
+import com.example.ian.meizitu.R;
 
 import java.util.List;
 
@@ -55,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.grid_view);
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.grid_swipe_refresh);
-        
-
-
 
         //设置swipeRefreshLayout位置
        swipeRefreshLayout.setProgressViewOffset(false, 0,  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
@@ -100,6 +103,21 @@ public class MainActivity extends AppCompatActivity {
                 //获取加载的最后一个可见视图在适配器的位置
                 int[] positions = mLayoutManager.findLastVisibleItemPositions(null);
                 lastVisibleItem = Math.max(positions[0],positions[1]);
+            }
+        });
+
+        //设置干货集中营按钮监听
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.gank_website:
+                        Intent gankIntent = new Intent(MainActivity.this,ArticleActivity.class);
+                        String gankUrl = "http://gank.io";
+                        gankIntent.putExtra("url",gankUrl);
+                        startActivity(gankIntent);
+                }
+                return false;
             }
         });
     }

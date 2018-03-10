@@ -1,4 +1,4 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.ian.meizitu.bean.Meizis;
+import com.example.ian.meizitu.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

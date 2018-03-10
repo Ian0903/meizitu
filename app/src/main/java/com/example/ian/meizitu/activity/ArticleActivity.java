@@ -1,4 +1,4 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.example.ian.meizitu.R;
 
 public class ArticleActivity extends AppCompatActivity {
 
@@ -19,7 +21,7 @@ public class ArticleActivity extends AppCompatActivity {
         articleWeb = (WebView)findViewById(R.id.articleWeb);
 
         //获取文章URL
-        String artUrl = getIntent().getStringExtra("articleUrl");
+        String url = getIntent().getStringExtra("url");
 
 
         //配置WebView
@@ -30,6 +32,6 @@ public class ArticleActivity extends AppCompatActivity {
 
         //加载url
         articleWeb.setWebViewClient(new WebViewClient());
-        articleWeb.loadUrl(artUrl);
+        articleWeb.loadUrl(url);
     }
 }

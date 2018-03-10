@@ -1,4 +1,4 @@
-package com.example.ian.meizitu;
+package com.example.ian.meizitu.bean;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -44,7 +44,7 @@ public class DateEnity {
         this.category = category;
     }
 
-    class ResultsBean {
+    public class ResultsBean {
         public List<Basebean> Android;
         public List<Basebean> iOS;
         @SerializedName("休息视频")
