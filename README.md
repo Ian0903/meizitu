@@ -7,6 +7,7 @@
 ### 功能：
 
   实现图片上拉刷新、下拉加载、图片保存、分享功能...
+  
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/4.jpg)
   
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/3.jpg)
@@ -28,4 +29,4 @@
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.github.medyo:android-about-page:1.2.4'
     
-### 数据来源与代码家：[gank.io](gank.io)
+### 数据来源与代码家：[gank.io](http://gank.io)
