@@ -24,4 +24,4 @@
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.github.medyo:android-about-page:1.2.4'
     
-### 数据来源与代码家：gank.io    
+### 数据来源与代码家：[gank.io](gank.io)
