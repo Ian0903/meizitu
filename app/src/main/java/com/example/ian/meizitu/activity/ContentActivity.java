@@ -53,6 +53,7 @@ public class ContentActivity extends AppCompatActivity {
         headerImage = (ImageView)findViewById(R.id.header_image);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collToolbar);
         getDate();
+        
         init();
         setListener();
         getContent();
