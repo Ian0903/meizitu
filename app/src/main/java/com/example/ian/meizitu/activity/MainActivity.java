@@ -141,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.gank_shareapp:
                         Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT,"发现一个充满干货的App哦！\n 下载地址：");
+                        sendIntent.putExtra(Intent.EXTRA_TEXT,"发现一个充满干货的App哦！\n " +
+                                "下载地址：https://pan.baidu.com/s/1Uadz8p5rk2tzfvoGcph5PQ");
                         sendIntent.setType("text/plain");
                         startActivity(Intent.createChooser(sendIntent,"分享给..."));
                         break;

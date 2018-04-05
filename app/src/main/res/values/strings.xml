@@ -1,7 +1,14 @@
 <resources>
-    <string name="app_name">妹子图</string>
-    <string name="gank_website">干货集中营</string>
+    <string name="app_name">干货集中营</string>
+    <string name="gank_shareapp">推荐给朋友</string>
     <string name="title">妹子图</string>
     <string name="title_activity_content">ContentActivity</string>
     <string name="title_activity_video">VideoActivity</string>
+    <string name="share">分享</string>
+    <string name="picture_save">保存</string>
+    <string name="copy_website">复制链接</string>
+    <string name="share_website">分享文章</string>
+    <string name="open_website">浏览器打开</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="gank_about">关于App</string>
 </resources>

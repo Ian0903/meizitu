@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="theme_primary">#432e2a</color>
+    <color name="theme_primary_darker">#2d1e1b</color>
+    <color name="theme_primary_dark">#231714</color>
     <color name="actionMenuColor">#ffffff</color>
+    <color name="pictureBg">#231714</color>
+    <color name="white">#ffffff</color>
+    <color name="itemblack">#000000</color>
+    <color name="grey">#78909c</color>
 </resources>

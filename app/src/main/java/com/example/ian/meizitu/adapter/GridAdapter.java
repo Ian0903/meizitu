@@ -5,63 +5,54 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.ian.meizitu.bean.Meizis;
+import com.bumptech.glide.Glide;
 import com.example.ian.meizitu.R;
-import com.squareup.picasso.Picasso;
+import com.example.ian.meizitu.data.entity.Meizi;
+import com.example.ian.meizitu.listener.MeizhiTouchListener;
+import com.example.ian.meizitu.widget.RatioImageView;
 
 import java.util.List;
+
+import static com.example.ian.meizitu.R.id.grid_photo;
+import static com.example.ian.meizitu.R.id.grid_title;
 
 /**
  * Created by Ian on 2017/10/22.
  */
 
-public class GridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener{
+public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder>{
 
     private Context context;
-
-    private List<Meizis.Meizi> meizis;
+    private List<Meizi> meizis;
+    private MeizhiTouchListener mMeizhiTouchListener;
 
     //初始化adapter
-    public GridAdapter(List<Meizis.Meizi> meizis, Context context){
-        this.meizis=meizis;
+    public GridAdapter(List<Meizi> meizis, Context context){
+        this.meizis = meizis;
         this.context = context;
     }
 
-    //自定义监听事件
-    public static interface onReyclerViewItemClickListener{
-        void onItemClick(View view);
-    }
-
-    private onReyclerViewItemClickListener itemClickListener = null;
-
-    public void setOnItemClickListener(onReyclerViewItemClickListener itemClickListener){
-        this.itemClickListener = itemClickListener;
-    }
-
-
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         //加载item布局
         View view = LayoutInflater.from(context).inflate(R.layout.grid_item,parent,false);
 
         MyViewHolder viewHolder = new MyViewHolder(view);
 
-        view.setOnClickListener(this);
-
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        Meizi meizi = meizis.get(position);
+        holder.meizi = meizi;
         //绑定item图片
-       Picasso.with(context).load(meizis.get(position).getUrl()).into(((MyViewHolder) holder).grid_photo);
+        Glide.with(context).load(meizis.get(position).getUrl()).into(holder.gridPhoto);
         //绑定item标题
-        ((MyViewHolder)holder).grid_title.setText(meizis.get(position).getDesc());
+        holder.gridTitle.setText(meizi.getDesc());
     }
 
     @Override
@@ -69,24 +60,30 @@ public class GridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         return meizis.size();
     }
 
-    //item点击事件回调
-    public void onClick(View v){
-        if(itemClickListener!=null){
-            itemClickListener.onItemClick(v);
-        }
+    public void setMeizhiTouchListener(MeizhiTouchListener mMeizhiTouchListener){
+        this.mMeizhiTouchListener = mMeizhiTouchListener;
     }
 
-    private class MyViewHolder extends RecyclerView.ViewHolder{
+   class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView grid_title;
+        private TextView gridTitle;
 
-        private ImageButton grid_photo;
+        private RatioImageView gridPhoto;
+
+        Meizi meizi;
+
 
         public MyViewHolder(View view){
             super(view);
-            grid_photo = (ImageButton)view.findViewById(R.id.grid_photo);
-            grid_title = (TextView)view.findViewById(R.id.grid_title);
-
+            gridPhoto = (RatioImageView) view.findViewById(grid_photo);
+            gridTitle = (TextView)view.findViewById(grid_title);
+            gridPhoto.setOnClickListener(this);
+            gridTitle.setOnClickListener(this);
         }
-    }
+
+       @Override
+       public void onClick(View v) {
+            mMeizhiTouchListener.onTouch(v,gridPhoto,gridTitle,meizi);
+       }
+   }
 }

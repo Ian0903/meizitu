@@ -5,12 +5,9 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="#ffffff">
 
    <include layout="@layout/toolbar"></include>
-
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/grid_swipe_refresh"
@@ -22,8 +19,8 @@
             android:id="@+id/grid_view"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:divider="#ffffff"
-            android:dividerHeight="3dp"
+            android:paddingLeft="2.5dp"
+            android:paddingRight="2.5dp"
 
            />
 </android.support.v4.widget.SwipeRefreshLayout>

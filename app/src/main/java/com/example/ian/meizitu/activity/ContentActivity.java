@@ -2,21 +2,23 @@ package com.example.ian.meizitu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ImageView;
 
-import com.example.ian.meizitu.net.ApiService;
-import com.example.ian.meizitu.bean.Basebean;
-import com.example.ian.meizitu.adapter.ContentAdapter;
-import com.example.ian.meizitu.bean.DateEnity;
+import com.bumptech.glide.Glide;
 import com.example.ian.meizitu.R;
+import com.example.ian.meizitu.adapter.ContentAdapter;
+import com.example.ian.meizitu.data.Datedata;
+import com.example.ian.meizitu.data.entity.Gank;
+import com.example.ian.meizitu.net.ApiService;
 import com.example.ian.meizitu.util.SnackbarUtil;
 
 import java.util.ArrayList;
@@ -29,104 +31,93 @@ import rx.schedulers.Schedulers;
 
 public class ContentActivity extends AppCompatActivity {
 
-    private ImageButton imageButton;
     private CoordinatorLayout contentLayout;
-    private List<Basebean> contentList;
-    private RecyclerView contentRecycler;
+    private List<Gank> contentList = new ArrayList<>();
+    private RecyclerView contentRecyler;
     private ContentAdapter contentAdapter;
     private LinearLayoutManager contentLayoutManager;
+    private ImageView headerImage;
     private String year,month,day;
-    private String videoUrl;
-    private TextView title;
+    private String videoUrl,photoUrl;
+    private Toolbar headerToolbar;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_content);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-
-        init();
-
-        setListener();
-
+        headerToolbar = (Toolbar) findViewById(R.id.header_toolbar);
+        contentLayout = (CoordinatorLayout)findViewById(R.id.contentLayout);
+        contentRecyler = (RecyclerView)findViewById(R.id.content_list);
+        headerImage = (ImageView)findViewById(R.id.header_image);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collToolbar);
         getDate();
-
-
+        init();
+        setListener();
+        getContent();
     }
 
     public void init(){
-        title = (TextView)findViewById(R.id.content_title);
-        title.getPaint().setFakeBoldText(true);
-
-        imageButton = (ImageButton)findViewById(R.id.video_photo);
-
-        contentList = new ArrayList<>();
-
-        contentLayout = (CoordinatorLayout)findViewById(R.id.contentLayout);
-
-        contentRecycler = (RecyclerView)findViewById(R.id.content_recycler);
+        headerToolbar.inflateMenu(R.menu.menu_content);
+        collapsingToolbarLayout.setTitle(year+"-"+month+"-"+day);
+        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.actionMenuColor));
+        headerToolbar.setNavigationIcon(R.mipmap.ic_back_white_24dp);
+        Glide.with(ContentActivity.this).load(photoUrl).into(headerImage);
 
         contentLayoutManager = new LinearLayoutManager(ContentActivity.this,LinearLayoutManager.VERTICAL,false);
-
-        contentRecycler.setLayoutManager(contentLayoutManager);
-
-        contentRecycler.setAdapter(contentAdapter = new ContentAdapter(ContentActivity.this,contentList));
+        contentRecyler.setLayoutManager(contentLayoutManager);
+        contentRecyler.setAdapter(contentAdapter = new ContentAdapter(ContentActivity.this,contentList));
     }
 
     public void setListener(){
-        //图片设置监听
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        headerToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent videoIntent = new Intent(ContentActivity.this,VideoActivity.class);
-                videoIntent.putExtra("videoUrl",videoUrl);
-                startActivity(videoIntent);
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.video_share ){
+                    shareVideo();
+                }
+                return false;
             }
         });
 
-        //文章列表设置监听
-        contentAdapter.setOnItemClickListener(new ContentAdapter.OnItemClickListener() {
+        headerToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(View view) {
-                int position = contentRecycler.getChildAdapterPosition(view);
-                String articleUrl = contentList.get(position).getUrl();
-                Intent artUrlIntent = new Intent(ContentActivity.this,ArticleActivity.class);
-                artUrlIntent.putExtra("url",articleUrl);
-                startActivity(artUrlIntent);
+            public void onClick(View v) {
+                finish();
             }
         });
+
     }
 
     //获取选定日期
     public void getDate(){
 
         Intent dateIntent = getIntent();
+        photoUrl = dateIntent.getStringExtra("photoUrl");
+
         String date = dateIntent.getStringExtra("date");
         String[] temp = date.split("-");
         year = temp[0];
         month = temp[1];
         day = temp[2].substring(0,2);
-        getContent();
 
     }
 
     public void getContent(){
-
         ApiService.getService().getContent(year,month,day)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .map(new Func1<DateEnity, DateEnity.ResultsBean>() {
+                .map(new Func1<Datedata, Datedata.ResultsBean>() {
                     @Override
-                    public DateEnity.ResultsBean call(DateEnity dateEnity) {
-                        return dateEnity.getResults();
+                    public Datedata.ResultsBean call(Datedata dateData) {
+                        return dateData.getResults();
                     }
                 })
                 .map(this::addAllResult
                 )
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Basebean>>() {
+                .subscribe(new Subscriber<List<Gank>>() {
                     @Override
                     public void onCompleted() {
 
@@ -134,14 +125,14 @@ public class ContentActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                       // SnackbarUtil.ShortSnackbar(contentLayout,"获取数据失败",SnackbarUtil.Info).show();
+                        SnackbarUtil.ShortSnackbar(contentLayout,"获取数据失败",SnackbarUtil.Info).show();
                         e.printStackTrace();
 
                     }
 
                     @Override
-                    public void onNext(List<Basebean> basebeen) {
-                        if(basebeen.isEmpty())
+                    public void onNext(List<Gank> ganks) {
+                        if(ganks.isEmpty())
                         {
                             SnackbarUtil.ShortSnackbar(contentLayout,"获取数据失败",SnackbarUtil.Info).show();
                         }else{
@@ -152,18 +143,24 @@ public class ContentActivity extends AppCompatActivity {
 
     }
 
-    private List<Basebean> addAllResult(DateEnity.ResultsBean results){
-        if(results.Android!=null) contentList.addAll(results.Android);
-        if(results.iOS!=null) contentList.addAll(results.iOS);
-        if(results.Other!=null) contentList.addAll(results.Other);
-        if(results.Fore!=null) contentList.addAll(results.Fore);
-        if(results.Recom!=null) contentList.addAll(results.Recom);
-        if(results.Video!=null){
-            contentList.addAll(results.Video);
-            videoUrl = results.Video.get(0).getUrl();
+    private List<Gank> addAllResult(Datedata.ResultsBean results){
+        if(results.androidList!=null) contentList.addAll(results.androidList);
+        if(results.iOSList!=null) contentList.addAll(results.iOSList);
+        if(results.拓展资源List!=null) contentList.addAll(results.拓展资源List);
+        if(results.瞎推荐List!=null) contentList.addAll(results.瞎推荐List);
+        if(results.休息视频List!=null){
+            contentList.addAll(results.休息视频List);
+            videoUrl = results.休息视频List.get(0).getUrl();
         }
-        if(results.Weal!=null) contentList.addAll(results.Weal);
+        if(results.妹纸List!=null) contentList.addAll(results.妹纸List);
         return contentList;
+    }
+
+    private void shareVideo(){
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,"发现一个有趣的视频哦！\n"+videoUrl+"\n来自干货集中营");
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent,"分享给..."));
     }
 
 

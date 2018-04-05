@@ -1,7 +1,8 @@
 package com.example.ian.meizitu.net;
 
-import com.example.ian.meizitu.bean.DateEnity;
-import com.example.ian.meizitu.bean.Meizis;
+import com.example.ian.meizitu.data.Datedata;
+import com.example.ian.meizitu.data.Meizidata;
+import com.example.ian.meizitu.data.Videodata;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -13,9 +14,12 @@ import rx.Observable;
  */
 
 public interface GankApi {
-    @GET("data/{type}/{count}/{page}")
-    Observable<Meizis>  getData(@Path("type") String type, @Path("count") int count, @Path("page") int page );
+    @GET("data/福利/10/{page}")
+    Observable<Meizidata>  getMeiziData(@Path("page") int page );
+
+    @GET("data/休息视频/10/{page}")
+    Observable<Videodata>  getVideoData(@Path("page") int page );
 
     @GET("day/{year}/{month}/{day}")
-    Observable<DateEnity> getContent(@Path("year") String year, @Path("month") String month, @Path("day") String day);
+    Observable<Datedata> getContent(@Path("year") String year, @Path("month") String month, @Path("day") String day);
 }

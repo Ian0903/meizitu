@@ -5,8 +5,15 @@
     android:layout_height="match_parent">
 
     <item
-        android:id="@+id/gank_website"
-        android:title="@string/gank_website"
+        android:id="@+id/gank_shareapp"
+        android:title="@string/gank_shareapp"
         app:showAsAction="never"
     />
+
+    <item
+        android:id="@+id/gank_about"
+        android:title="@string/gank_about"
+        app:showAsAction="never">
+
+    </item>
 </menu>

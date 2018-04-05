@@ -1,31 +1,22 @@
-package com.example.ian.meizitu.bean;
+package com.example.ian.meizitu.data.entity;
 
-import java.util.List;
+import com.litesuits.orm.db.annotation.Column;
+import com.litesuits.orm.db.annotation.Table;
 
 /**
- * Created by Ian on 2017/11/6.
+ * Created by Ian on 2018/3/25.
  */
 
-public class Basebean {
+@Table("Meizis") public class Meizi extends Soul {
 
-    private String _id;
-    private String createdAt;
-    private String desc;
-    private String publishedAt;
-    private String source;
-    private String type;
-    private String url;
-    private boolean used;
-    private String who;
-    private List<String> images;
-
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
+    @Column("createAt") private String createdAt;
+    @Column("desc") private String desc;
+    @Column("publishedAT") private String publishedAt;
+    @Column("source") private String source;
+    @Column("type") private String type;
+    @Column("url") private String url;
+    @Column("used") private boolean used;
+    @Column("who") private String who;
 
     public String getCreatedAt() {
         return createdAt;
@@ -89,13 +80,5 @@ public class Basebean {
 
     public void setWho(String who) {
         this.who = who;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
     }
 }

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/theme_primary"
         app:titleTextColor="@color/white"
-        app:layout_scrollFlags="scroll"
+        app:layout_scrollFlags="scroll|enterAlways"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     </android.support.v7.widget.Toolbar>
