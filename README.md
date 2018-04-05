@@ -9,11 +9,8 @@
   实现图片上拉刷新、下拉加载、图片保存、分享功能...
   
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/4.jpg)
-  
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/3.jpg)
-  
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/2.jpg)
-  
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/1.jpg)
   
 
