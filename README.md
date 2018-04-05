@@ -10,6 +10,7 @@
   
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/4.jpg)
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/3.jpg)
+  
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/2.jpg)
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/1.jpg)
   
