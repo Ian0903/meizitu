@@ -19,17 +19,11 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.ContentActivity"
-            android:launchMode="singleTask"
             android:label="@string/title_activity_content"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.WebActivity"
@@ -37,11 +31,26 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.PictureActivity"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.AboutActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AboutTheme"/>
+            android:theme="@style/AboutTheme" />
+        <activity
+            android:name=".activity.SplashActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.WelcomeActivity"
+            android:launchMode="singleTask"
+            >
+
+        </activity>
     </application>
 
 </manifest>

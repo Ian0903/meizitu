@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/grid_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Title"/>
     </LinearLayout>
