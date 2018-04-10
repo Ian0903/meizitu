@@ -9,9 +9,10 @@
   实现图片上拉刷新、下拉加载、图片保存、分享功能...
   
   更新：增加引导页
+  
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/5.jpg)
-  ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/6.jpg)
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/7.jpg)
+  ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/8.jpg)
   
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/4.jpg)
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/3.jpg)
