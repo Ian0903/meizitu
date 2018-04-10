@@ -12,7 +12,6 @@
   
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/5.jpg)
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/7.jpg)
-  ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/8.jpg)
   
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/4.jpg)
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/3.jpg)
