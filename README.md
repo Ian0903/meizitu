@@ -2,13 +2,13 @@
 
 ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/Logo.png)
 
+下载地址：https://www.coolapk.com/apk/182583
+
 ### 每天精选一张图片，一系列干货文章和一个精选的视频！
 
 ### 功能：
 
   实现图片上拉刷新、下拉加载、图片保存、分享功能...
-  
-  更新：增加引导页
   
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/5.jpg)
   ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/7.jpg)
