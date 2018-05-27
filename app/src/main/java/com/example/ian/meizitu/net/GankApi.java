@@ -1,8 +1,7 @@
 package com.example.ian.meizitu.net;
 
+import com.example.ian.meizitu.data.Categorydata;
 import com.example.ian.meizitu.data.Datedata;
-import com.example.ian.meizitu.data.Meizidata;
-import com.example.ian.meizitu.data.Videodata;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -14,12 +13,13 @@ import rx.Observable;
  */
 
 public interface GankApi {
-    @GET("data/福利/10/{page}")
-    Observable<Meizidata>  getMeiziData(@Path("page") int page );
 
-    @GET("data/休息视频/10/{page}")
-    Observable<Videodata>  getVideoData(@Path("page") int page );
+    @GET("data/{type}/{count}/{page}")
+    Observable<Categorydata>  getCategoryData(@Path("type") String type, @Path("count") int count, @Path("page") int page);
 
     @GET("day/{year}/{month}/{day}")
     Observable<Datedata> getContent(@Path("year") String year, @Path("month") String month, @Path("day") String day);
+
+    @GET("search/query/{queryText}/category/all/count/{count}/page/{page}")
+    Observable<Categorydata> getQueryData(@Path("queryText") String queryText,@Path("count") int count,@Path("page") int page);
 }

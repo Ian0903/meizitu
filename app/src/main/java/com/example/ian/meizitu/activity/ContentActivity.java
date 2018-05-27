@@ -149,6 +149,7 @@ public class ContentActivity extends AppCompatActivity {
         if(results.iOSList!=null) contentList.addAll(results.iOSList);
         if(results.拓展资源List!=null) contentList.addAll(results.拓展资源List);
         if(results.瞎推荐List!=null) contentList.addAll(results.瞎推荐List);
+        if(results.appList!=null) contentList.addAll(results.appList);
         if(results.休息视频List!=null){
             contentList.addAll(results.休息视频List);
             videoUrl = results.休息视频List.get(0).getUrl();

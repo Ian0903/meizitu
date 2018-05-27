@@ -19,7 +19,14 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.ContentActivity"
             android:label="@string/title_activity_content"
@@ -37,19 +44,12 @@
             android:launchMode="singleTask"
             android:theme="@style/AboutTheme" />
         <activity
-            android:name=".activity.SplashActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activity.WelcomeActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTask" />
+        <activity android:name=".activity.SearchActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar"
             >
-
         </activity>
     </application>
 

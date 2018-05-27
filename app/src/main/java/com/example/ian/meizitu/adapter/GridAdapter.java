@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ian.meizitu.R;
-import com.example.ian.meizitu.data.entity.Meizi;
+import com.example.ian.meizitu.data.entity.Gank;
 import com.example.ian.meizitu.listener.MeizhiTouchListener;
 import com.example.ian.meizitu.widget.RatioImageView;
 
@@ -25,12 +25,12 @@ import static com.example.ian.meizitu.R.id.grid_title;
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder>{
 
     private Context context;
-    private List<Meizi> meizis;
+    private List<Gank> ganks;
     private MeizhiTouchListener mMeizhiTouchListener;
 
     //初始化adapter
-    public GridAdapter(List<Meizi> meizis, Context context){
-        this.meizis = meizis;
+    public GridAdapter(List<Gank> ganks, Context context){
+        this.ganks = ganks;
         this.context = context;
     }
 
@@ -47,17 +47,16 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Meizi meizi = meizis.get(position);
-        holder.meizi = meizi;
-        //绑定item图片
-        Glide.with(context).load(meizis.get(position).getUrl()).into(holder.gridPhoto);
-        //绑定item标题
-        holder.gridTitle.setText(meizi.getDesc());
+        Gank gank = ganks.get(position);
+        holder.gank = gank;
+
+        Glide.with(context).load(gank.getUrl()).placeholder(R.mipmap.ic_placeholder).into(holder.gridPhoto);
+        holder.gridTitle.setText(gank.getDesc());
     }
 
     @Override
     public int getItemCount() {
-        return meizis.size();
+        return ganks.size();
     }
 
     public void setMeizhiTouchListener(MeizhiTouchListener mMeizhiTouchListener){
@@ -70,7 +69,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder>{
 
         private RatioImageView gridPhoto;
 
-        Meizi meizi;
+        Gank gank;
 
 
         public MyViewHolder(View view){
@@ -83,7 +82,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder>{
 
        @Override
        public void onClick(View v) {
-            mMeizhiTouchListener.onTouch(v,gridPhoto,gridTitle,meizi);
+            mMeizhiTouchListener.onTouch(v,gridPhoto,gridTitle,gank);
        }
    }
 }

@@ -1,6 +1,7 @@
 package com.example.ian.meizitu.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
@@ -13,14 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 
 import com.example.ian.meizitu.R;
 import com.example.ian.meizitu.adapter.GridAdapter;
-import com.example.ian.meizitu.data.Meizidata;
-import com.example.ian.meizitu.data.Videodata;
+import com.example.ian.meizitu.data.Categorydata;
 import com.example.ian.meizitu.data.entity.Gank;
-import com.example.ian.meizitu.data.entity.Meizi;
 import com.example.ian.meizitu.listener.MeizhiTouchListener;
 import com.example.ian.meizitu.net.ApiService;
 import com.example.ian.meizitu.util.MyApp;
@@ -43,24 +41,31 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private CoordinatorLayout coordinatorLayout;
-    private List<Meizi> meizis = new ArrayList<>();
+    private List<Gank> ganks = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
     private StaggeredGridLayoutManager mLayoutManager;
     private int page = 1;
     private GridAdapter adapter;
     private boolean isFirstTimeTouchBottom = true;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        boolean isFirstStart = isFirstOpen();
+        //如果第一次启动则进入引导页面
+        if(isFirstStart){
+            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+        //否则直接进入主页面
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        QueryBuilder query = new QueryBuilder(Meizi.class);
+        QueryBuilder query = new QueryBuilder(Gank.class);
         query.appendOrderDescBy("publishedAt");
         query.limit(0, 10);
-        meizis.addAll(MyApp.liteOrm.query(query));
+        ganks.addAll(MyApp.liteOrm.query(query));
         init();
         setListener();
     }
@@ -78,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void init(){
-        //初始化toolbar
+        toolbar.setTitle("干货收割机");
         toolbar.inflateMenu(R.menu.menu_main);
-        toolbar.setTitle("干货集中营");
 
         recyclerView = (RecyclerView)findViewById(R.id.grid_view);
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         //设置RecyclerView为瀑布流布局
         mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapter = new GridAdapter(meizis,MainActivity.this) );
+        recyclerView.setAdapter(adapter = new GridAdapter(ganks,MainActivity.this) );
 
 
     }
@@ -134,12 +139,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //设置干货集中营按钮监听
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+
                 switch (item.getItemId()){
-                    case R.id.gank_shareapp:
+                    case R.id.gank_search:
+                        startActivity(new Intent(MainActivity.this,SearchActivity.class));
+                        break;
+                    case R.id.gank_share:
                         Intent sendIntent = new Intent(Intent.ACTION_SEND);
                         sendIntent.putExtra(Intent.EXTRA_TEXT,"发现一个充满干货的App哦！\n " +
                                 "下载地址：https://pan.baidu.com/s/1Uadz8p5rk2tzfvoGcph5PQ");
@@ -166,24 +175,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void GetData(boolean isCleanDB){
 
-        Observable.zip(ApiService.getService().getMeiziData(page),ApiService.getService().getVideoData(page),
-                new Func2<Meizidata,Videodata,List<Meizi>>(){
+        Observable.zip(ApiService.getService().getCategoryData("福利",10,page),ApiService.getService().getCategoryData("休息视频",10,page),
+                new Func2<Categorydata,Categorydata,List<Gank>>(){
                     @Override
-                    public List<Meizi> call(Meizidata meizidata, Videodata videodata) {
+                    public List<Gank> call(Categorydata meizidata, Categorydata videodata) {
                         return createPhotoWithVideo(meizidata,videodata);
                     }
                 })
-                    .doOnNext(new Action1<List<Meizi>>() {
+                    .doOnNext(new Action1<List<Gank>>() {
                         @Override
-                        public void call(List<Meizi> meiziList) {
+                        public void call(List<Gank> gankList) {
                             //将请求的数据保存进数据库
-                            MyApp.liteOrm.insert(meiziList, ConflictAlgorithm.Replace);
+                            MyApp.liteOrm.insert(gankList, ConflictAlgorithm.Replace);
                         }
                     })
                     .subscribeOn(Schedulers.io())
                     .unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<List<Meizi>>() {
+                    .subscribe(new Subscriber<List<Gank>>() {
                         @Override
                         public void onCompleted() {
                         }
@@ -194,9 +203,9 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onNext(List<Meizi> meiziList) {
-                            if(isCleanDB) meizis.clear();
-                            meizis.addAll(meiziList);
+                        public void onNext(List<Gank> gankList) {
+                            if(isCleanDB) ganks.clear();
+                            ganks.addAll(gankList);
                             adapter.notifyDataSetChanged();
                             setRefresh(false);
                         }
@@ -207,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     private MeizhiTouchListener getMeiziTouchListener(){
         return new MeizhiTouchListener() {
             @Override
-            public void onTouch(View v, View photoView, View titleView, Meizi meizi) {
+            public void onTouch(View v, View photoView, View titleView, Gank meizi) {
                 if(meizi == null) return;
                 if(v == photoView){
                     Intent intent = new Intent(MainActivity.this,PictureActivity.class);
@@ -225,9 +234,9 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private List<Meizi> createPhotoWithVideo(Meizidata meizidata,Videodata videodata){
-        List<Gank> temp1 = videodata.getResults();
-        List<Meizi> temp2 = meizidata.getResults();
+    private List<Gank> createPhotoWithVideo(Categorydata meiziData,Categorydata videoData){
+        List<Gank> temp1 = videoData.getResults();
+        List<Gank> temp2 = meiziData.getResults();
         for(int i = 0;i<temp1.size();i++)
             temp2.get(i).setDesc(temp1.get(i).getDesc());
         return temp2;
@@ -250,4 +259,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private boolean isFirstOpen(){
+        SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+        return pref.getBoolean("isFirstOpen",true);
+    }
 }

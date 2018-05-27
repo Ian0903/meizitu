@@ -5,15 +5,23 @@
     android:layout_height="match_parent">
 
     <item
-        android:id="@+id/gank_shareapp"
-        android:title="@string/gank_shareapp"
-        app:showAsAction="never"
-    />
+        android:id="@+id/gank_search"
+        android:title="@string/search"
+        android:icon="@mipmap/ic_search_white_36dp"
+        app:showAsAction="always"
+    >
+    </item>
 
     <item
         android:id="@+id/gank_about"
         android:title="@string/gank_about"
         app:showAsAction="never">
-
     </item>
+
+    <item
+        android:id="@+id/gank_share"
+        android:title="@string/gank_shareapp"
+        app:showAsAction="never">
+    </item>
+
 </menu>

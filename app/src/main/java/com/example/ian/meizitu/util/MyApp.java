@@ -19,7 +19,7 @@ public class MyApp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        context = getApplicationContext();
+        context = this;
         liteOrm = LiteOrm.newSingleInstance(context,DB_NAME);
         if(BuildConfig.DEBUG){
             liteOrm.setDebugged(true);

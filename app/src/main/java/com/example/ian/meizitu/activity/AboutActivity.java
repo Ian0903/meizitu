@@ -16,9 +16,9 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         View view = new AboutPage(this)
                 .isRTL(false)
-                .setImage(R.mipmap.ic_launcher)
+                .setImage(R.mipmap.ic_launcher_about)
                 .setDescription("每天一张精选妹子图、一系列干货、一个精选小视频")
-                .addItem(new Element().setTitle("*  Version 1.0"))
+                .addItem(new Element().setTitle("*  Version 1.1"))
                 .addItem(new Element().setTitle("*  Author:Ian"))
                 .addItem(new Element().setTitle("*  Email:huashigm@qq.com"))
                 .addWebsite("https://github.com/Ian0903/meizitu","开源地址")

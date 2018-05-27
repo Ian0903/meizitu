@@ -22,8 +22,10 @@
             android:paddingLeft="2.5dp"
             android:paddingRight="2.5dp"
 
-           />
-</android.support.v4.widget.SwipeRefreshLayout>
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
 
 </android.support.design.widget.CoordinatorLayout>

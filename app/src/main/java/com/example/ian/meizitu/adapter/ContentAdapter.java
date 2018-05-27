@@ -70,7 +70,7 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.MyViewHo
     }
 
     private void hideCategory(MyViewHolder holder){
-        if(!isVisibleOf(holder.category))holder.category.setVisibility(View.GONE);
+        if(isVisibleOf(holder.category))holder.category.setVisibility(View.GONE);
     }
 
     private boolean isVisibleOf(View v){

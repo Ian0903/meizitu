@@ -118,7 +118,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
     private void enterMainActivity(){
         Intent intent = new Intent(WelcomeActivity.this,
-                SplashActivity.class);
+                MainActivity.class);
         startActivity(intent);
         SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
         editor.putBoolean("isFirstOpen",false);

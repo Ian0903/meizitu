@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">干货集中营</string>
+    <string name="app_name">干货收割机</string>
     <string name="gank_shareapp">推荐给朋友</string>
     <string name="title">妹子图</string>
     <string name="title_activity_content">ContentActivity</string>
@@ -11,4 +11,13 @@
     <string name="open_website">浏览器打开</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="gank_about">关于App</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="search">搜索</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="empty_query">未找到符合条件的干货\n试试其他关键词</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
