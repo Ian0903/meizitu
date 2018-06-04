@@ -8,9 +8,9 @@
 
 #### 2018/06/04 更新
 
-添加搜索功能，个人收藏功能。
+  添加搜索功能，个人收藏功能。
 
-修复某些bug......
+  修复某些bug......
 
 ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/10.jpg)
 ![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/11.jpg)
