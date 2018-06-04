@@ -6,6 +6,12 @@
 
 ### 每天精选一张图片，一系列干货文章和一个精选的视频！
 
+2018/06/04 更新
+添加搜索功能，个人收藏功能。
+修复某些bug......
+![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/10.png)
+![](https://github.com/Ian0903/meizitu/blob/master/Screenshots/11.png)
+
 ### 功能：
 
   实现图片上拉刷新、下拉加载、图片保存、分享功能...
