@@ -82,6 +82,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder>{
 
        @Override
        public void onClick(View v) {
+            int position = getLayoutPosition();
             mMeizhiTouchListener.onTouch(v,gridPhoto,gridTitle,gank);
        }
    }

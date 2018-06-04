@@ -20,6 +20,8 @@ import com.example.ian.meizitu.net.ApiService;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -29,22 +31,21 @@ public class SearchActivity extends AppCompatActivity {
     public static final int DEFAULT_COUNT = 27;
     public static final int DEFAULT_PAGE = 1;
 
-    private SearchView searchView;
-    private Toolbar toolbar;
-    private RecyclerView recyclerView;
+    @BindView(R.id.search_view) public SearchView searchView;
+    @BindView(R.id.search_toolbar) public Toolbar toolbar;
+    @BindView(R.id.search_list) public RecyclerView recyclerView;
+    @BindView(R.id.empty_view) public TextView emptyQuery;
+    @BindView(R.id.search_layout_id) public CoordinatorLayout coordinatorLayout;
+
     private LinearLayoutManager linearLayoutManager;
     private List<Gank> searchResults = new ArrayList<>();
     private QueryAdapter queryAdapter;
-    private TextView emptyQuery;
-    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        toolbar = (Toolbar) findViewById(R.id.search_toolbar);
-        emptyQuery = (TextView) findViewById(R.id.empty_view);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.search_layout_id);
+        ButterKnife.bind(this);
         initToolbar();
         initRecyclerView();
         initSearchView();
@@ -52,14 +53,12 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView(){
-        recyclerView = (RecyclerView) findViewById(R.id.search_list);
         linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(queryAdapter = new QueryAdapter(searchResults,this));
     }
 
     private void initSearchView(){
-        searchView = (SearchView) findViewById(R.id.search_view);
         searchView.onActionViewExpanded();
         searchView.setQueryHint("请输入文章关键字");
         searchView.setSubmitButtonEnabled(true);
@@ -80,12 +79,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initToolbar(){
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void queryData(String queryText){

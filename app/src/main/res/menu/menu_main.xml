@@ -13,14 +13,20 @@
     </item>
 
     <item
-        android:id="@+id/gank_about"
-        android:title="@string/gank_about"
+        android:id="@+id/my_save"
+        android:title="@string/save_title"
         app:showAsAction="never">
     </item>
 
     <item
         android:id="@+id/gank_share"
         android:title="@string/gank_shareapp"
+        app:showAsAction="never">
+    </item>
+
+    <item
+        android:id="@+id/gank_about"
+        android:title="@string/gank_about"
         app:showAsAction="never">
     </item>
 

@@ -51,7 +51,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.medyo:android-about-page:1.2.4'
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
     testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
 buildscript {
@@ -71,3 +73,4 @@ repositories {
 
 apply plugin: 'com.android.application' //or apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.jakewharton.butterknife'

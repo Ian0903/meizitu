@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">干货收割机</string>
+    <string name="app_name">干货集中营</string>
     <string name="gank_shareapp">推荐给朋友</string>
     <string name="title">妹子图</string>
     <string name="title_activity_content">ContentActivity</string>
@@ -17,7 +17,12 @@
     <string name="title_activity_category">CategoryActivity</string>
     <string name="empty_query">未找到符合条件的干货\n试试其他关键词</string>
     <string name="action_settings">Settings</string>
+    <string name="save_title">个人收藏</string>
+    <string name="save_website">收藏文章</string>
+    <string name="share_app">发现一个充满干货的App哦！\n
+        下载地址：https://pan.baidu.com/s/1Uadz8p5rk2tzfvoGcph5PQ</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

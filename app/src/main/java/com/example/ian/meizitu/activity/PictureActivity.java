@@ -1,6 +1,5 @@
 package com.example.ian.meizitu.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,8 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
@@ -25,6 +22,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -33,89 +32,61 @@ import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PictureActivity extends AppCompatActivity {
-
-    private Toolbar toolbar;
+    @BindView(R.id.toolbar) public Toolbar toolbar;
+    @BindView(R.id.picture) public PhotoView photoView;
+    @BindView(R.id.appBar) public AppBarLayout mAppbar;
+    @BindView(R.id.picture_layout) public RelativeLayout pictureLayout;
     private String photoUrl;
     private String title;
-    private PhotoView photoView;
     private PhotoViewAttacher photoViewAttacher;
-    private AppBarLayout mAppbar;
     private boolean mIsHidden = false;
-    private RelativeLayout pictureLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_picture);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        photoView = (PhotoView) findViewById(R.id.picture);
-        mAppbar = (AppBarLayout) findViewById(R.id.appBar);
-        pictureLayout = (RelativeLayout) findViewById(R.id.picture_layout);
+        ButterKnife.bind(this);
         getPhotoAndTitle();
-        init();
+        initToolbar();
+        initPhotoViewAttacher();
+        Glide.with(this).load(photoUrl).into(photoView);
     }
 
-    private void init(){
-        //初始化toolbar
+    private void initToolbar(){
         toolbar.setTitle(title);
         toolbar.inflateMenu(R.menu.menu_pitcure);
         toolbar.setTitleTextColor(getResources().getColor(R.color.actionMenuColor));
         toolbar.setNavigationIcon(R.mipmap.ic_back_white_24dp);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int menuItemId = item.getItemId();
-                if(menuItemId == R.id.picture_save){
-                    savePicture();
-                }
-                else if(menuItemId == R.id.picture_share){
-                    sharePicture();
-                }
-                return true;
+        toolbar.setOnMenuItemClickListener(item -> {
+            int menuItemId = item.getItemId();
+            if(menuItemId == R.id.picture_save){
+                savePicture();
             }
-        });
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+            else if(menuItemId == R.id.picture_share){
+                sharePicture();
             }
+            return true;
         });
+        toolbar.setNavigationOnClickListener(v -> finish());
+    }
 
-        //加载图片
-        Glide.with(this).load(photoUrl).into(photoView);
-
-        //设置图片点击事件
+    private void initPhotoViewAttacher(){
         photoViewAttacher = new PhotoViewAttacher(photoView);
-        photoViewAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                hideOrShowToolbar();
-            }
-        });
-        photoViewAttacher.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                new AlertDialog.Builder(PictureActivity.this)
-                        .setMessage("是否保存照片？")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                savePicture();
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
-                return true;
-            }
+        photoViewAttacher.setOnViewTapListener((view, x, y) -> hideOrShowToolbar());
+        photoViewAttacher.setOnLongClickListener(v -> {
+            new AlertDialog.Builder(PictureActivity.this)
+                    .setMessage("是否保存照片？")
+                    .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        savePicture();
+                        dialog.dismiss();
+                    })
+                    .show();
+            return true;
         });
     }
+
     private void getPhotoAndTitle(){
         Intent intent = getIntent();
         photoUrl = intent.getStringExtra("photoUrl");
@@ -123,45 +94,41 @@ public class PictureActivity extends AppCompatActivity {
     }
 
     private Observable<Uri> savePictureAndGetpath(){
-        return Observable.create(new Observable.OnSubscribe<Uri>() {
-
-            @Override
-            public void call(Subscriber<? super Uri> subscriber) {
-                Bitmap bitmap = null;
-                try{
-                    bitmap = Picasso.with(PictureActivity.this).load(photoUrl).get();
-                }catch(IOException e){
-                    subscriber.onError(e);
-                }
-                if(bitmap == null){
-                    subscriber.onError(new Exception("无法下载图片"));
-                }
-
-                //将bimap保存到手机目录
-                File appDir = new File(Environment.getExternalStorageDirectory(),"meizitu");
-                if(!appDir.exists()){
-                    appDir.mkdir();
-                }
-                String fileName = title.replace('/','-') + ".jpg";
-                File file = new File(appDir,fileName);
-                try{
-                    FileOutputStream fos = new FileOutputStream(file);
-                    assert bitmap != null;
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
-                    fos.flush();
-                    fos.close();
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-
-                //通知图库更新
-                Uri uri = Uri.fromFile(file);
-                Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,uri);
-                sendBroadcast(scannerIntent);
-
-                subscriber.onNext(uri);
-                subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<Uri>) subscriber -> {
+            Bitmap bitmap = null;
+            try{
+                bitmap = Picasso.with(PictureActivity.this).load(photoUrl).get();
+            }catch(IOException e){
+                subscriber.onError(e);
             }
+            if(bitmap == null){
+                subscriber.onError(new Exception("无法下载图片"));
+            }
+
+            //将bimap保存到手机目录
+            File appDir = new File(Environment.getExternalStorageDirectory(),"meizitu");
+            if(!appDir.exists()){
+                appDir.mkdir();
+            }
+            String fileName = title.replace('/','-') + ".jpg";
+            File file = new File(appDir,fileName);
+            try{
+                FileOutputStream fos = new FileOutputStream(file);
+                assert bitmap != null;
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                fos.flush();
+                fos.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+            //通知图库更新
+            Uri uri = Uri.fromFile(file);
+            Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,uri);
+            sendBroadcast(scannerIntent);
+
+            subscriber.onNext(uri);
+            subscriber.onCompleted();
         })
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io());

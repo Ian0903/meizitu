@@ -12,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.MenuItem;
-import android.view.View;
 
 import com.example.ian.meizitu.R;
 import com.example.ian.meizitu.adapter.GridAdapter;
@@ -22,27 +20,32 @@ import com.example.ian.meizitu.data.entity.Gank;
 import com.example.ian.meizitu.listener.MeizhiTouchListener;
 import com.example.ian.meizitu.net.ApiService;
 import com.example.ian.meizitu.util.MyApp;
+import com.example.ian.meizitu.util.Share;
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int PRELOAD_SIZE = 6;
-    private Toolbar toolbar;
-    private RecyclerView recyclerView;
-    private CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.toolbar)
+    public Toolbar toolbar;
+    @BindView(R.id.grid_view)
+    public RecyclerView recyclerView;
+    @BindView(R.id.coordinatorLayout)
+    public CoordinatorLayout coordinatorLayout;
     private List<Gank> ganks = new ArrayList<>();
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.grid_swipe_refresh)
+    public SwipeRefreshLayout swipeRefreshLayout;
     private StaggeredGridLayoutManager mLayoutManager;
     private int page = 1;
     private GridAdapter adapter;
@@ -61,59 +64,35 @@ public class MainActivity extends AppCompatActivity {
         }
         //否则直接进入主页面
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        QueryBuilder query = new QueryBuilder(Gank.class);
-        query.appendOrderDescBy("publishedAt");
-        query.limit(0, 10);
-        ganks.addAll(MyApp.liteOrm.query(query));
-        init();
-        setListener();
+        ButterKnife.bind(this);
+        getCatch();
+        initToolbar();
+        initRecycler();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState){
         super.onPostCreate(savedInstanceState);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setRefresh(true);
-            }
-        },350);
+        new Handler().postDelayed(() -> setRefresh(true),350);
         GetData(true);
 
     }
 
 
-    public void init(){
-        toolbar.setTitle("干货收割机");
-        toolbar.inflateMenu(R.menu.menu_main);
-
-        recyclerView = (RecyclerView)findViewById(R.id.grid_view);
-        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.grid_swipe_refresh);
-
+    private void initRecycler(){
         //设置swipeRefreshLayout位置
         swipeRefreshLayout.setProgressViewOffset(false, 0,  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
-
         //设置RecyclerView为瀑布流布局
         mLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter = new GridAdapter(ganks,MainActivity.this) );
-
-
-    }
-
-    public void setListener(){
         adapter.setMeizhiTouchListener(getMeiziTouchListener());
 
         //设置上拉刷新监听
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-            @Override
-            public void onRefresh() {
-                setRefresh(true);
-                page = 1;
-                GetData(true);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            setRefresh(true);
+            page = 1;
+            GetData(true);
         });
 
 
@@ -139,55 +118,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                switch (item.getItemId()){
-                    case R.id.gank_search:
-                        startActivity(new Intent(MainActivity.this,SearchActivity.class));
-                        break;
-                    case R.id.gank_share:
-                        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT,"发现一个充满干货的App哦！\n " +
-                                "下载地址：https://pan.baidu.com/s/1Uadz8p5rk2tzfvoGcph5PQ");
-                        sendIntent.setType("text/plain");
-                        startActivity(Intent.createChooser(sendIntent,"分享给..."));
-                        break;
-                    case R.id.gank_about:
-                        startActivity(new Intent(MainActivity.this,AboutActivity.class));
-                        break;
-                }
-                return false;
-            }
-        });
-
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recyclerView.smoothScrollToPosition(0);
-            }
-        });
     }
 
+    private void initToolbar(){
+        toolbar.setTitle(R.string.app_name);
+        toolbar.inflateMenu(R.menu.menu_main);
 
+        toolbar.setOnMenuItemClickListener(item -> {
+
+            switch (item.getItemId()){
+                case R.id.gank_search:
+                    startActivity(new Intent(MainActivity.this,SearchActivity.class));
+                    break;
+                case R.id.gank_share:
+                    Share.shareApp(MainActivity.this);
+                    break;
+                case R.id.gank_about:
+                    startActivity(new Intent(MainActivity.this,AboutActivity.class));
+                    break;
+                case R.id.my_save:
+                    startActivity(new Intent(MainActivity.this, SaveActivity.class));
+                    break;
+            }
+            return false;
+        });
+
+        toolbar.setOnClickListener(v -> recyclerView.smoothScrollToPosition(0));
+    }
 
     public void GetData(boolean isCleanDB){
 
         Observable.zip(ApiService.getService().getCategoryData("福利",10,page),ApiService.getService().getCategoryData("休息视频",10,page),
-                new Func2<Categorydata,Categorydata,List<Gank>>(){
-                    @Override
-                    public List<Gank> call(Categorydata meizidata, Categorydata videodata) {
-                        return createPhotoWithVideo(meizidata,videodata);
-                    }
-                })
-                    .doOnNext(new Action1<List<Gank>>() {
-                        @Override
-                        public void call(List<Gank> gankList) {
-                            //将请求的数据保存进数据库
-                            MyApp.liteOrm.insert(gankList, ConflictAlgorithm.Replace);
-                        }
+                (meizidata, videodata) -> createPhotoWithVideo(meizidata,videodata))
+                    .doOnNext(gankList -> {
+                        //将请求的数据保存进数据库
+                        MyApp.liteOrm.insert(gankList, ConflictAlgorithm.Replace);
                     })
                     .subscribeOn(Schedulers.io())
                     .unsubscribeOn(Schedulers.io())
@@ -214,22 +179,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private MeizhiTouchListener getMeiziTouchListener(){
-        return new MeizhiTouchListener() {
-            @Override
-            public void onTouch(View v, View photoView, View titleView, Gank meizi) {
-                if(meizi == null) return;
-                if(v == photoView){
-                    Intent intent = new Intent(MainActivity.this,PictureActivity.class);
-                    intent.putExtra("photoUrl",meizi.getUrl());
-                    intent.putExtra("title",meizi.getDesc());
-                    startActivity(intent);
-                }
-                else if(v == titleView){
-                    Intent intent = new Intent(MainActivity.this,ContentActivity.class);
-                    intent.putExtra("date",meizi.getPublishedAt());//用日期作为请求标志
-                    intent.putExtra("photoUrl",meizi.getUrl());
-                    startActivity(intent);
-                }
+        return (v, photoView, titleView, meizi) -> {
+            if(meizi == null) return;
+            if(v == photoView){
+                Intent intent = new Intent(MainActivity.this,PictureActivity.class);
+                intent.putExtra("photoUrl",meizi.getUrl());
+                intent.putExtra("title",meizi.getDesc());
+                startActivity(intent);
+            }
+            else if(v == titleView){
+                Intent intent = new Intent(MainActivity.this,ContentActivity.class);
+                intent.putExtra("date",meizi.getPublishedAt());//用日期作为请求标志
+                intent.putExtra("photoUrl",meizi.getUrl());
+                startActivity(intent);
             }
         };
     }
@@ -248,12 +210,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         if(!isRefresh){
             //防止刷新图标消失太快
-            swipeRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            },1000);
+            swipeRefreshLayout.postDelayed(() -> swipeRefreshLayout.setRefreshing(false),1000);
         }else{
             swipeRefreshLayout.setRefreshing(true);
         }
@@ -263,5 +220,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFirstOpen(){
         SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
         return pref.getBoolean("isFirstOpen",true);
+    }
+
+    private void getCatch(){
+        QueryBuilder query = new QueryBuilder(Gank.class);
+        query.appendOrderDescBy("publishedAt");
+        query.limit(0, 10);
+        ganks.addAll(MyApp.liteOrm.query(query));
     }
 }

@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -17,11 +15,22 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.example.ian.meizitu.R;
+import com.example.ian.meizitu.data.entity.Save;
+import com.example.ian.meizitu.util.MyApp;
+import com.example.ian.meizitu.util.Share;
+import com.litesuits.orm.db.assit.QueryBuilder;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
+
+import java.util.Date;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class WebActivity extends AppCompatActivity {
 
-    private WebView website;
-    private Toolbar webToolbar;
+    @BindView(R.id.website) public WebView website;
+    @BindView(R.id.toolbar) public Toolbar webToolbar;
     private String url;
     private String title;
 
@@ -30,41 +39,35 @@ public class WebActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_web);
-        webToolbar = (Toolbar)findViewById(R.id.toolbar);
-        website = (WebView)findViewById(R.id.website);
+        ButterKnife.bind(this);
+        getUrlAndTitle();
+        initToolbar();
+        initWebView();
+    }
 
-        //获取文章URL
-        url = getIntent().getStringExtra("webUrl");
-        title = getIntent().getStringExtra("webTitle");
+    private void initToolbar(){
         webToolbar.setTitle(title);
         webToolbar.inflateMenu(R.menu.menu_web);
         webToolbar.setNavigationIcon(R.mipmap.ic_back_white_24dp);
-        webToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+        webToolbar.setNavigationOnClickListener(v -> finish());
+        webToolbar.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if(itemId == R.id.copy_website){
+                ClipboardManager clm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText(null,url);
+                clm.setPrimaryClip(clipData);
+                Toast.makeText(WebActivity.this,"复制成功", Toast.LENGTH_SHORT).show();
+            }else if(itemId == R.id.share_website){
+                shareWebsite();
+            }else if(itemId == R.id.open_website){
+                Uri uri = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                startActivity(intent);
+            }else if(itemId == R.id.save_website){
+                saveWebsite();
             }
+            return false;
         });
-        webToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int itemId = item.getItemId();
-                if(itemId == R.id.copy_website){
-                    ClipboardManager clm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clipData = ClipData.newPlainText(null,url);
-                    clm.setPrimaryClip(clipData);
-                    Toast.makeText(WebActivity.this,"复制成功", Toast.LENGTH_SHORT).show();
-                }else if(itemId == R.id.share_website){
-                    shareWebsite();
-                }else if(itemId == R.id.open_website){
-                    Uri uri = Uri.parse(url);
-                    Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-                    startActivity(intent);
-                }
-                return false;
-            }
-        });
-        initWebView();
     }
 
     private void initWebView(){
@@ -79,11 +82,30 @@ public class WebActivity extends AppCompatActivity {
         website.loadUrl(url);
     }
 
+    private void getUrlAndTitle(){
+        url = getIntent().getStringExtra("webUrl");
+        title = getIntent().getStringExtra("webTitle");
+    }
+
     private void shareWebsite(){
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT,title+"\n"+url);
-        shareIntent.setType("text/plain");
-        startActivity(Intent.createChooser(shareIntent,"分享给..."));
+        Share.shareUrl(this,url,title);
+    }
+
+    private void saveWebsite(){
+        Save save = new Save();
+        //检测是否重复收藏
+        List<Save> isSorted = MyApp.liteOrm.query(new QueryBuilder<>(Save.class)
+                .where("desc = ? ",new String[]{title})
+        );
+        if(isSorted.isEmpty() || isSorted.size() == 0){
+            save.setDesc(title);
+            save.setUrl(url);
+            save.setSaveTime(new Date().getTime());//保存收藏时间，用于查询的排序
+            MyApp.liteOrm.insert(save, ConflictAlgorithm.Replace);
+            Toast.makeText(WebActivity.this,"收藏成功",Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(WebActivity.this,"文章已存在", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

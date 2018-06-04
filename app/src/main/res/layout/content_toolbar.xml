@@ -13,7 +13,10 @@
         android:layout_height="wrap_content"
         app:contentScrim="@color/theme_primary"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:collapsedTitleTextAppearance="@color/white"
+        app:expandedTitleTextAppearance="@color/itemblack"
         >
+
     <ImageView
         android:id="@+id/header_image"
         android:layout_width="match_parent"
@@ -28,7 +31,8 @@
         android:id="@+id/header_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
-        app:layout_collapseMode="pin">
+        app:layout_collapseMode="pin"
+        app:navigationIcon="@mipmap/ic_back_white_24dp">
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.CollapsingToolbarLayout>
